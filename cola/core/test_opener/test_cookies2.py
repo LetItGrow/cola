@@ -55,8 +55,8 @@ urllib2.urlopen(request)
 for cookie in cookies:
     print cookie.name, cookie.value
 
-# # 将cookie存为一个文件
-# cookies.save(filename="cookie.txt")
+# 将cookie存为一个文件
+cookies.save(filename="cookie.txt")
 #
 # # 新建一个cookie对象
 # cookies2 = cookielib.MozillaCookieJar()

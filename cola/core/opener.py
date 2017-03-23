@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 '''
 Created on 2013-5-17
-
 @author: Chine
 '''
 
@@ -23,6 +22,7 @@ class BuiltinOpener(Opener):
             self.cj.load(cookie_filename)
         self.cookie_processor = urllib2.HTTPCookieProcessor(self.cj)
         self.opener = urllib2.build_opener(self.cookie_processor, urllib2.HTTPHandler)
+        self.opener.addheaders = [('User-agent', main_conf['opener']['user-agent'])]
         urllib2.install_opener(self.opener)
     
     def open(self, url):
@@ -52,5 +52,9 @@ class MechanizeOpener(Opener):
         return self.browser.open(url).read()
     
     def browse_open(self, url):
-        self.browser.open(url)
         return self.browser
+if __name__ == '__main__':
+    BuiltinOpener = BuiltinOpener()
+    data = BuiltinOpener.open('https://xueqiu.com/snowman/login')
+    for cookie in BuiltinOpener.cj:
+        print cookie.name,cookie.value

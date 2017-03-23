@@ -2,6 +2,9 @@
 import cookielib
 import random
 import urllib2
+
+import time
+
 USER_AGENTS = [
     "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; AcooBrowser; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
     "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; Acoo Browser; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.0.04506)",
@@ -56,5 +59,44 @@ urllib2.install_opener(opener)
 
 request = urllib2.Request("https://xueqiu.com/snowman/login", headers = HEADER)
 urllib2.urlopen(request)
+# for cookie in cookies:
+#     print cookie.name, cookie.value
+f = open('1.txt', "w")
+now = time.time()
 for cookie in cookies:
-    print cookie.name, cookie.value
+    print cookie.discard,cookie.is_expired(now)
+    if not True and cookie.discard:
+        print 'cookie.discard'
+        continue
+    if not True and cookie.is_expired(now):
+        print cookie.is_expired(now)
+        continue
+    print cookie.secure
+    if cookie.secure:
+        secure = "TRUE"
+    else:
+        secure = "FALSE"
+    if cookie.domain.startswith("."):
+        initial_dot = "TRUE"
+    else:
+        initial_dot = "FALSE"
+    print initial_dot
+    if cookie.expires is not None:
+        expires = str(cookie.expires)
+    else:
+        expires = ""
+    print expires
+    if cookie.value is None:
+        # cookies.txt regards 'Set-Cookie: foo' as a cookie
+        # with no name, whereas cookielib regards it as a
+        # cookie with no value.
+        name = ""
+        value = cookie.name
+    else:
+        name = cookie.name
+        value = cookie.value
+    print ("\t".join([cookie.domain, initial_dot, cookie.path,
+                   secure, expires, name, value]) +
+        "\n")
+    f.write("\t".join([cookie.domain, initial_dot, cookie.path,secure, expires, name, value]) +"\n")
+f.close()

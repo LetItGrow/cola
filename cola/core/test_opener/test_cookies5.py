@@ -120,6 +120,7 @@ class MozillaCookieJar(FileCookieJar):
             f.write(self.header)
             now = time.time()
             for cookie in self:
+                print cookie
                 if not ignore_discard and cookie.discard:
                     continue
                 if not ignore_expires and cookie.is_expired(now):
@@ -147,3 +148,7 @@ class MozillaCookieJar(FileCookieJar):
                     "\n")
         finally:
             f.close()
+
+if __name__ == '__main__':
+    MozillaCookieJar  = MozillaCookieJar()
+    MozillaCookieJar.save()
