@@ -45,6 +45,7 @@ HEADER = {
     'Connection': 'keep-alive',
     'Accept-Encoding': 'gzip, deflate',
 }
+# todo 加cookie容器
 cookies = cookielib.MozillaCookieJar()
 cookieHandler = urllib2.HTTPCookieProcessor(cookiejar=cookies)
 opener = urllib2.build_opener(cookieHandler)
@@ -73,6 +74,7 @@ proxy=urllib2.ProxyHandler({'http':'http://someproxy.com:8080'})
 auth=urllib2.HTTPBasicAuthHandler()
 auth.add_password()
 opener=urllib2.build_opener(auth,proxy)
+u=opener.open('http://www.example.com/evilplan.html')
 # 或
 import urllib2
 proxy = 'http://%s:%s@%s' % ('userName', 'password', 'proxy')

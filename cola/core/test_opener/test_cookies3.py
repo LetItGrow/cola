@@ -49,24 +49,52 @@ headers = {
     "X-Requested-With": "XMLHttpRequest"
     "Accept-Encoding': 'gzip, deflate"
 }
+# cookies = cookielib.MozillaCookieJar()
+# cookieHandler = urllib2.HTTPCookieProcessor(cookiejar=cookies)
+# opener = urllib2.build_opener(cookieHandler)
+# urllib2.install_opener(opener)
+#
+# request = urllib2.Request("https://xueqiu.com/snowman/login", headers=headers)
+# #todo:填单不好使？
+# # postData = {
+# #         'remember':'1',
+# #         'username':'13521536323',
+# #         'password':'3753324g'
+# # }
+# # request.add_data(urllib.urlencode(postData))
+# response = urllib2.urlopen(request)
+# print response.getcode()
+# for cookie in cookies:
+#     print cookie.name, cookie.value
+#
+# request = urllib2.Request("https://xueqiu.com/stock/forchart/stocklist.json?symbol=SH601318&period=5d&_=1490205640868", headers=headers)
+# response = urllib2.urlopen(request)
+# print response.read()
+
+import urllib2
+# todo 设置cookies容器
 cookies = cookielib.MozillaCookieJar()
 cookieHandler = urllib2.HTTPCookieProcessor(cookiejar=cookies)
-opener = urllib2.build_opener(cookieHandler)
+# todo 设置账号密码
+auth=urllib2.HTTPBasicAuthHandler()
+auth.add_password(None,'https://xueqiu.com/snowman/login','13521536323','3753324g')
+# todo 设置代理
+proxy=urllib2.ProxyHandler({'http':'http://someproxy.com:8080'})
+
+# todo 加载http功能
+opener=urllib2.build_opener(auth,cookieHandler,proxy)
+# todo http功能全局化
 urllib2.install_opener(opener)
 
-request = urllib2.Request("https://xueqiu.com/snowman/login", headers=headers)
-#todo:填单不好使？
-# postData = {
-#         'remember':'1',
-#         'username':'13521536323',
-#         'password':'3753324g'
-# }
-# request.add_data(urllib.urlencode(postData))
-response = urllib2.urlopen(request)
+# todo 加伪装头
+opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+# todo 打开登陆url取得cookies
+response = opener.open('https://xueqiu.com/snowman/login')
+print response.read()
+
 print response.getcode()
 for cookie in cookies:
     print cookie.name, cookie.value
 
-request = urllib2.Request("https://xueqiu.com/stock/forchart/stocklist.json?symbol=SH601318&period=5d&_=1490205640868", headers=headers)
-response = urllib2.urlopen(request)
+response = urllib2.urlopen("https://xueqiu.com/stock/forchart/stocklist.json?symbol=SH601318&period=5d&_=1490205640868")
 print response.read()
