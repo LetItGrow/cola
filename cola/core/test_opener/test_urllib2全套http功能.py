@@ -87,3 +87,6 @@ for cookie in cookies:
 response = urllib2.urlopen("https://xueqiu.com/stock/forchart/stocklist.json?symbol=SH601318&period=5d&_=1490205640868", timeout=10)
 print response.read()
 
+# todo 另一种伪装头方式
+request = urllib2.Request("https://xueqiu.com/snowman/login", headers = headers)
+response = urllib2.urlopen(request)
