@@ -1,9 +1,7 @@
 # coding=utf-8
-import urllib
-import urllib2
 import cookielib
 import random
-
+import urllib2
 USER_AGENTS = [
     "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; AcooBrowser; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
     "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; Acoo Browser; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.0.04506)",
@@ -40,33 +38,42 @@ USER_AGENTS = [
     "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11",
     "Mozilla/5.0 (X11; U; Linux x86_64; zh-CN; rv:1.9.2.10) Gecko/20100922 Ubuntu/10.10 (maverick) Firefox/3.6.10"
 ]
-headers = {
-    "Accept": "*/*",
-    "Accept-Language": "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4",
-    "Connection": "keep-alive",
-    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-    "User-Agent": random.choice(USER_AGENTS),
-    "X-Requested-With": "XMLHttpRequest"
-    "Accept-Encoding': 'gzip, deflate"
+HEADER = {
+    'User-Agent': random.choice(USER_AGENTS),
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.5',
+    'Connection': 'keep-alive',
+    'Accept-Encoding': 'gzip, deflate',
 }
 cookies = cookielib.MozillaCookieJar()
 cookieHandler = urllib2.HTTPCookieProcessor(cookiejar=cookies)
 opener = urllib2.build_opener(cookieHandler)
 urllib2.install_opener(opener)
 
-request = urllib2.Request("https://xueqiu.com/snowman/login", headers=headers)
-#todo:填单不好使？
-# postData = {
-#         'remember':'1',
-#         'username':'13521536323',
-#         'password':'3753324g'
-# }
-# request.add_data(urllib.urlencode(postData))
-response = urllib2.urlopen(request)
-print response.getcode()
+request = urllib2.Request("https://xueqiu.com/snowman/login", headers = HEADER)
+urllib2.urlopen(request)
 for cookie in cookies:
     print cookie.name, cookie.value
 
-request = urllib2.Request("https://xueqiu.com/stock/forchart/stocklist.json?symbol=SH601318&period=5d&_=1490205640868", headers=headers)
-response = urllib2.urlopen(request)
-print response.read()
+# todo 加伪装头
+import urllib2
+opener = urllib2.build_opener()
+opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+opener.open('http://www.example.com/')
+
+# todo 加账户密码
+import urllib2
+auth=urllib2.HTTPBasicAuthHandler()
+auth.add_password('Administrator','http://www.example.com','Dave','123456')
+opener=urllib2.build_opener(auth)
+u=opener.open('http://www.example.com/evilplan.html')
+
+# todo 加代理ip
+proxy=urllib2.ProxyHandler({'http':'http://someproxy.com:8080'})
+auth=urllib2.HTTPBasicAuthHandler()
+auth.add_password()
+opener=urllib2.build_opener(auth,proxy)
+# 或
+import urllib2
+proxy = 'http://%s:%s@%s' % ('userName', 'password', 'proxy')
+inforMation = urllib2.urlopen("http://www.example.com", proxies={'http':proxy})
