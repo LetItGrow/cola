@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import cookielib
 import random
+import socket
+import urllib2
 
 USER_AGENTS = [
     "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; AcooBrowser; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
@@ -47,10 +49,7 @@ headers = {
     "X-Requested-With": "XMLHttpRequest"
     "Accept-Encoding': 'gzip, deflate"
 }
-
-import urllib2
-import socket
-
+# todo 设置超时
 socket.setdefaulttimeout(10) # 10 秒钟后超时
 urllib2.socket.setdefaulttimeout(10) # 另一种方式
 # todo 设置cookies容器
@@ -59,31 +58,19 @@ cookieHandler = urllib2.HTTPCookieProcessor(cookiejar=cookies)
 # todo 设置账号密码
 auth=urllib2.HTTPBasicAuthHandler()
 auth.add_password(None,'https://xueqiu.com/snowman/login','13521536323','3753324g')
-# todo 设置代理
-proxy=urllib2.ProxyHandler({"http":"122.244.112.220:8118"})
-# proxy= urllib2.ProxyHandler({"http" : 'http://some-proxy.com:8080'})
 
 # todo 加载http功能
-# opener=urllib2.build_opener(auth,cookieHandler,proxy)
-opener=urllib2.build_opener(auth,cookieHandler,proxy)
+opener=urllib2.build_opener(auth,cookieHandler)
 # todo http功能全局化
 urllib2.install_opener(opener)
 
-# todo 加伪装头
-opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-# todo 打开登陆url取得cookies
-response = opener.open('https://xueqiu.com/snowman/login')
-print response.read()
+request = urllib2.Request("https://xueqiu.com/snowman/login", headers = headers)
+response = urllib2.urlopen(request)
+# todo 检查重定向
+redirected = response.geturl() != 'https://xueqiu.com/snowman/login'
+# todo 查看cookie
+for cookie in cookies:
+    print cookie.name, cookie.value
 # todo 可用于ip验证！
 response = opener.open('http://httpbin.org/ip')
 print response.read()
-# todo 检查重定向
-redirected = response.geturl() != 'https://xueqiu.com/snowman/login'
-print 'redirected:%s'%redirected
-print response.getcode()
-for cookie in cookies:
-    print cookie.name, cookie.value
-
-response = urllib2.urlopen("https://xueqiu.com/stock/forchart/stocklist.json?symbol=SH601318&period=5d&_=1490205640868", timeout=10)
-print response.read()
-

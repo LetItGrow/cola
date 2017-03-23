@@ -78,4 +78,4 @@ u=opener.open('http://www.example.com/evilplan.html')
 # 或
 import urllib2
 proxy = 'http://%s:%s@%s' % ('userName', 'password', 'proxy')
-inforMation = urllib2.urlopen("http://www.example.com", proxies={'http':proxy})
+inforMation = urllib2.urlopen("http://www.example.com")
